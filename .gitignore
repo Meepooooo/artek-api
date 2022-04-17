@@ -1,1 +1,26 @@
-/go.sum
+# Linux binaries
+*
+!/**/
+!*.*
+
+# Other binaries
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binaries
+*.test
+
+# Output of the go coverage tool
+*.out
+
+# Dependency directories
+vendor/
+
+# Go workspace file
+go.work
+
+# Go sum file
+go.sum
