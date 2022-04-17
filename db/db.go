@@ -2,10 +2,15 @@ package db
 
 import (
 	"fmt"
-	"io/ioutil"
 
 	"github.com/jmoiron/sqlx"
 )
+
+var schema = `
+CREATE TABLE IF NOT EXISTS test (
+    id SERIAL PRIMARY KEY
+);
+`
 
 func Database(user string, password string, dbName string) (*sqlx.DB, error) {
 	connString := fmt.Sprintf("user=%s password=%s dbname=%s", user, password, dbName)
@@ -15,12 +20,7 @@ func Database(user string, password string, dbName string) (*sqlx.DB, error) {
 		return nil, err
 	}
 
-	bytes, err := ioutil.ReadFile("db/start.sql")
-	if err != nil {
-		return nil, err
-	}
-
-	db.MustExec(string(bytes))
+	db.MustExec(schema)
 
 	return db, nil
 }
