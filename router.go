@@ -3,8 +3,8 @@ package main
 import (
 	"net/http"
 
-	"github.com/TaeKwonZeus/artek-api/api/handlers"
 	"github.com/TaeKwonZeus/artek-api/config"
+	"github.com/TaeKwonZeus/artek-api/handlers"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/jmoiron/sqlx"
