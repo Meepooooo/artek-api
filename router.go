@@ -1,4 +1,4 @@
-package api
+package main
 
 import (
 	"net/http"
@@ -10,7 +10,7 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-func Router(db *sqlx.DB, config config.Config) http.Handler {
+func router(db *sqlx.DB, config config.Config) http.Handler {
 	handler := handlers.Handler{DB: db}
 	r := chi.NewRouter()
 
