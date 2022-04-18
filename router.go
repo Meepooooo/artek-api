@@ -11,7 +11,7 @@ import (
 )
 
 func router(db *sqlx.DB, config config.Config) http.Handler {
-	handler := handlers.Handler{DB: db}
+	handler := handlers.Context{DB: db, Config: config}
 	r := chi.NewRouter()
 
 	r.Use(middleware.Logger)

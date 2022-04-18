@@ -5,7 +5,7 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-type Handler struct {
+type Context struct {
 	DB     *sqlx.DB
 	Config config.Config
 }
