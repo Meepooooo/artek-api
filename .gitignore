@@ -24,3 +24,6 @@ go.work
 
 # Go sum file
 go.sum
+
+# Environment variable file
+# .env

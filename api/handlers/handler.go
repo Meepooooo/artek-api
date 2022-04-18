@@ -1,7 +1,11 @@
 package handlers
 
-import "github.com/jmoiron/sqlx"
+import (
+	"github.com/TaeKwonZeus/artek-api/config"
+	"github.com/jmoiron/sqlx"
+)
 
 type Handler struct {
-	DB *sqlx.DB
+	DB     *sqlx.DB
+	Config config.Config
 }

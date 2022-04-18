@@ -5,17 +5,23 @@ import (
 	"net/http"
 
 	"github.com/TaeKwonZeus/artek-api/api"
+	"github.com/TaeKwonZeus/artek-api/config"
 	"github.com/TaeKwonZeus/artek-api/db"
 	_ "github.com/lib/pq"
 )
 
 func main() {
-	db, err := db.Database("postgres", "postgres", "artek_api")
+	config, err := config.Load()
 	if err != nil {
 		log.Fatalln(err)
 	}
 
-	r := api.Router(db)
+	db, err := db.Database(config.DB)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	r := api.Router(db, config)
 
 	http.ListenAndServe(":3000", r)
 }

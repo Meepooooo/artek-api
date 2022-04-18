@@ -3,6 +3,7 @@ package db
 import (
 	"fmt"
 
+	"github.com/TaeKwonZeus/artek-api/config"
 	"github.com/jmoiron/sqlx"
 )
 
@@ -12,8 +13,8 @@ CREATE TABLE IF NOT EXISTS test (
 );
 `
 
-func Database(user string, password string, dbName string) (*sqlx.DB, error) {
-	connString := fmt.Sprintf("user=%s password=%s dbname=%s", user, password, dbName)
+func Database(config config.DBConfig) (*sqlx.DB, error) {
+	connString := fmt.Sprintf("user=%s password=%s dbname=%s", config.User, config.Password, config.Name)
 
 	db, err := sqlx.Connect("postgres", connString)
 	if err != nil {
