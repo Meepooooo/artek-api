@@ -2,6 +2,6 @@ package handlers
 
 import "net/http"
 
-func (h Context) Test(w http.ResponseWriter, r *http.Request) {
+func (Context) Test(w http.ResponseWriter, _ *http.Request) {
 	w.Write([]byte("Hello World!"))
 }
