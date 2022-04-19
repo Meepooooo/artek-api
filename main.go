@@ -5,7 +5,6 @@ import (
 	"net/http"
 
 	"github.com/TaeKwonZeus/artek-api/config"
-	_ "github.com/lib/pq"
 )
 
 func main() {

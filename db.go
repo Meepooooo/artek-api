@@ -5,6 +5,7 @@ import (
 
 	"github.com/TaeKwonZeus/artek-api/config"
 	"github.com/jmoiron/sqlx"
+	_ "github.com/lib/pq"
 )
 
 var schema = `
