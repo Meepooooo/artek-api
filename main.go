@@ -21,7 +21,7 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	context := api.Context{DB: db, Config: config}
+	context := api.Context{DB: db, Config: config.API}
 	r := api.Router(context)
 
 	log.Printf("available at port %d", config.API.Port)

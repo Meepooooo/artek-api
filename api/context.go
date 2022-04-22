@@ -7,5 +7,5 @@ import (
 
 type Context struct {
 	DB     *sqlx.DB
-	Config config.Config
+	Config config.APIConfig
 }
