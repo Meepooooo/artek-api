@@ -1,15 +1,16 @@
 package config
 
 import (
+	"encoding/json"
 	"errors"
-	"log"
 	"os"
 
 	"github.com/joho/godotenv"
 )
 
 type Config struct {
-	DB DBConfig
+	DB  DBConfig
+	API APIConfig
 }
 
 type DBConfig struct {
@@ -18,9 +19,15 @@ type DBConfig struct {
 	Name     string
 }
 
+type APIConfig struct {
+	Port int
+}
+
 func Load() (Config, error) {
+	config := Config{}
+
 	if err := godotenv.Load(); err != nil {
-		log.Fatalln(err)
+		return Config{}, err
 	}
 
 	user, exists := os.LookupEnv("DB_USER")
@@ -38,11 +45,21 @@ func Load() (Config, error) {
 		return Config{}, errors.New("environment variable DB_NAME does not exist")
 	}
 
-	return Config{
-		DBConfig{
-			user,
-			password,
-			dbName,
-		},
-	}, nil
+	config.DB = DBConfig{
+		user,
+		password,
+		dbName,
+	}
+
+	data, err := os.ReadFile("config.json")
+	if err != nil {
+		return config, err
+	}
+
+	err = json.Unmarshal(data, &config)
+	if err != nil {
+		return config, err
+	}
+
+	return config, nil
 }

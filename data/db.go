@@ -1,4 +1,4 @@
-package main
+package data
 
 import (
 	"fmt"
@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS test (
 );
 `
 
-func database(config config.DBConfig) (*sqlx.DB, error) {
+func Database(config config.DBConfig) (*sqlx.DB, error) {
 	connString := fmt.Sprintf("user=%s password=%s dbname=%s", config.User, config.Password, config.Name)
 
 	db, err := sqlx.Connect("postgres", connString)

@@ -1,10 +1,13 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
+	"github.com/TaeKwonZeus/artek-api/api"
 	"github.com/TaeKwonZeus/artek-api/config"
+	"github.com/TaeKwonZeus/artek-api/data"
 )
 
 func main() {
@@ -13,12 +16,14 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	db, err := database(config.DB)
+	db, err := data.Database(config.DB)
 	if err != nil {
 		log.Fatalln(err)
 	}
 
-	r := router(db, config)
+	context := api.Context{DB: db, Config: config}
+	r := api.Router(context)
 
-	http.ListenAndServe(":3000", r)
+	log.Printf("available at port %d", config.API.Port)
+	http.ListenAndServe(fmt.Sprintf(":%d", config.API.Port), r)
 }
