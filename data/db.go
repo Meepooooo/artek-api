@@ -1,23 +1,19 @@
 package data
 
 import (
-	"fmt"
-
 	"github.com/TaeKwonZeus/artek-api/config"
 	"github.com/jmoiron/sqlx"
-	_ "github.com/lib/pq"
+	_ "github.com/mattn/go-sqlite3"
 )
 
 var schema = `
 CREATE TABLE IF NOT EXISTS test (
-    id SERIAL PRIMARY KEY
+    id INTEGER PRIMARY KEY
 );
 `
 
 func Database(config config.DBConfig) (*sqlx.DB, error) {
-	connString := fmt.Sprintf("user=%s password=%s dbname=%s", config.User, config.Password, config.Name)
-
-	db, err := sqlx.Connect("postgres", connString)
+	db, err := sqlx.Connect("sqlite3", config.DSN)
 	if err != nil {
 		return nil, err
 	}

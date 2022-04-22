@@ -27,3 +27,6 @@ go.sum
 
 # Environment variable file
 .env
+
+# Database file
+app.db

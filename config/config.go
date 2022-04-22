@@ -14,9 +14,7 @@ type Config struct {
 }
 
 type DBConfig struct {
-	User     string
-	Password string
-	Name     string
+	DSN string
 }
 
 type APIConfig struct {
@@ -30,26 +28,12 @@ func Load() (Config, error) {
 		return Config{}, err
 	}
 
-	user, exists := os.LookupEnv("DB_USER")
+	dsn, exists := os.LookupEnv("DSN")
 	if !exists {
-		return Config{}, errors.New("environment variable DB_USER does not exist")
+		return Config{}, errors.New("environment variable DSN does not exist")
 	}
 
-	password, exists := os.LookupEnv("DB_PASSWORD")
-	if !exists {
-		return Config{}, errors.New("environment variable DB_PASSWORD does not exist")
-	}
-
-	dbName, exists := os.LookupEnv("DB_NAME")
-	if !exists {
-		return Config{}, errors.New("environment variable DB_NAME does not exist")
-	}
-
-	config.DB = DBConfig{
-		user,
-		password,
-		dbName,
-	}
+	config.DB = DBConfig{DSN: dsn}
 
 	data, err := os.ReadFile("config.json")
 	if err != nil {
