@@ -1,4 +1,4 @@
-package db
+package data
 
 import (
 	"github.com/TaeKwonZeus/artek-api/config"
@@ -7,11 +7,11 @@ import (
 )
 
 var schema = `
-CREATE TABLE sessions(
+CREATE TABLE IF NOT EXISTS sessions(
     id INTEGER PRIMARY KEY
 );
 
-CREATE TABLE session_users(
+CREATE TABLE IF NOT EXISTS session_users(
     id INTEGER PRIMARY KEY,
     session_id INTEGER NOT NULL,
     user_name TEXT NOT NULL,
@@ -26,7 +26,10 @@ func Database(config config.DBConfig) (*sqlx.DB, error) {
 		return nil, err
 	}
 
-	db.MustExec(schema)
+	_, err = db.Exec(schema)
+	if err != nil {
+		return nil, err
+	}
 
 	return db, nil
 }

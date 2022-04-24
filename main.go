@@ -7,7 +7,7 @@ import (
 
 	"github.com/TaeKwonZeus/artek-api/api"
 	"github.com/TaeKwonZeus/artek-api/config"
-	"github.com/TaeKwonZeus/artek-api/db"
+	"github.com/TaeKwonZeus/artek-api/data"
 )
 
 func main() {
@@ -16,7 +16,7 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	db, err := db.Database(config.DB)
+	db, err := data.Database(config.DB)
 	if err != nil {
 		log.Fatalln(err)
 	}
