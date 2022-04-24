@@ -1,4 +1,4 @@
-package data
+package db
 
 import (
 	"github.com/TaeKwonZeus/artek-api/config"
@@ -7,8 +7,16 @@ import (
 )
 
 var schema = `
-CREATE TABLE IF NOT EXISTS test (
+CREATE TABLE sessions(
     id INTEGER PRIMARY KEY
+);
+
+CREATE TABLE session_users(
+    id INTEGER PRIMARY KEY,
+    session_id INTEGER NOT NULL,
+    user_name TEXT NOT NULL,
+    user_role INTEGER NOT NULL,
+	FOREIGN KEY(session_id) REFERENCES sessions(id)
 );
 `
 
