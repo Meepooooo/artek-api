@@ -14,8 +14,8 @@ func Router(context Context) http.Handler {
 
 	r.Route("/v1", func(r chi.Router) {
 		r.Get("/", context.test)
-		r.Route("/session", func(r chi.Router) {
-			r.Post("/new", context.newSession)
+		r.Route("/team", func(r chi.Router) {
+			r.Post("/new", context.newTeam)
 		})
 	})
 
