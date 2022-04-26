@@ -16,12 +16,12 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	db, err := data.Database(config.DB)
+	_, err = data.Database(config.DB)
 	if err != nil {
 		log.Fatalln(err)
 	}
 
-	context := api.Context{DB: db, Config: config.API}
+	context := api.Context{Config: config.API}
 	r := api.Router(context)
 
 	log.Printf("available at port %d", config.API.Port)
