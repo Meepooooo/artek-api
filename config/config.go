@@ -14,7 +14,7 @@ type Config struct {
 }
 
 type DBConfig struct {
-	Location string
+	DSN string
 }
 
 type APIConfig struct {
@@ -28,12 +28,12 @@ func Load() (Config, error) {
 		return Config{}, err
 	}
 
-	loc, exists := os.LookupEnv("DB_LOCATION")
+	dsn, exists := os.LookupEnv("DSN")
 	if !exists {
-		return Config{}, errors.New("environment variable DB_LOCATION does not exist")
+		return Config{}, errors.New("environment variable DSN does not exist")
 	}
 
-	config.DB = DBConfig{Location: loc}
+	config.DB = DBConfig{DSN: dsn}
 
 	data, err := os.ReadFile("config.json")
 	if err != nil {
