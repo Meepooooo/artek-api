@@ -7,11 +7,23 @@ import (
 )
 
 var schema = `
+CREATE TABLE IF NOT EXISTS rooms(
+	id INTEGER PRIMARY KEY,
+	date DATETIME NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS teams(
-    id INT PRIMARY KEY,
-	name TEXT,
-	room_id INT,
+    id INTEGER PRIMARY KEY,
+	name TEXT NOT NULL,
+	room_id INTEGER NOT NULL,
 	FOREIGN KEY(room_id) REFERENCES rooms(id)
+);
+
+CREATE TABLE IF NOT EXISTS users(
+	id INTEGER PRIMARY KEY,
+	team_id INTEGER NOT NULL,
+	name TEXT NOT NULL,
+	role INTEGER NOT NULL
 );
 `
 
