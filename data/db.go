@@ -31,10 +31,7 @@ func Database(dsn string) (*sqlx.DB, error) {
 		return nil, err
 	}
 
-	_, err = db.Exec(schema)
-	if err != nil {
-		return nil, err
-	}
+	db.MustExec(schema)
 
 	return db, nil
 }

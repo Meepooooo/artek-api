@@ -10,12 +10,14 @@ func (c Context) createTeam(w http.ResponseWriter, _ *http.Request) {
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(err.Error()))
+		return
 	}
 
 	id, err := res.LastInsertId()
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(err.Error()))
+		return
 	}
 
 	resp, err := json.Marshal(struct {
@@ -24,6 +26,7 @@ func (c Context) createTeam(w http.ResponseWriter, _ *http.Request) {
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(err.Error()))
+		return
 	}
 
 	w.Write(resp)
