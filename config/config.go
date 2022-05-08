@@ -1,16 +1,16 @@
 package config
 
 import (
-	"encoding/json"
 	"errors"
 	"os"
+	"strconv"
 
 	"github.com/joho/godotenv"
 )
 
 type Config struct {
-	DB  DBConfig
-	API APIConfig
+	DSN  string
+	Port int
 }
 
 type DBConfig struct {
@@ -22,28 +22,22 @@ type APIConfig struct {
 }
 
 func Load() (Config, error) {
-	config := Config{}
-
-	if err := godotenv.Load(); err != nil {
-		return Config{}, err
-	}
+	godotenv.Load()
 
 	dsn, exists := os.LookupEnv("DSN")
 	if !exists {
 		return Config{}, errors.New("environment variable DSN does not exist")
 	}
 
-	config.DB = DBConfig{DSN: dsn}
-
-	data, err := os.ReadFile("config.json")
-	if err != nil {
-		return config, err
+	portString, exists := os.LookupEnv("PORT")
+	if !exists {
+		return Config{}, errors.New("environment variable PORT does not exist")
 	}
 
-	err = json.Unmarshal(data, &config)
+	port, err := strconv.Atoi(portString)
 	if err != nil {
-		return config, err
+		return Config{}, errors.New("cannot parse environment variable PORT")
 	}
 
-	return config, nil
+	return Config{DSN: dsn, Port: port}, nil
 }

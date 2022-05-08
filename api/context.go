@@ -1,11 +1,9 @@
 package api
 
 import (
-	"github.com/TaeKwonZeus/artek-api/config"
 	"github.com/jmoiron/sqlx"
 )
 
 type Context struct {
-	DB     *sqlx.DB
-	Config config.APIConfig
+	DB *sqlx.DB
 }

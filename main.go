@@ -16,14 +16,14 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	_, err = data.Database(config.DB)
+	db, err := data.Database(config.DSN)
 	if err != nil {
 		log.Fatalln(err)
 	}
 
-	context := api.Context{Config: config.API}
+	context := api.Context{DB: db}
 	r := api.Router(context)
 
-	log.Printf("available at port %d", config.API.Port)
-	http.ListenAndServe(fmt.Sprintf(":%d", config.API.Port), r)
+	log.Printf("available at port %d", config.Port)
+	http.ListenAndServe(fmt.Sprintf(":%d", config.Port), r)
 }

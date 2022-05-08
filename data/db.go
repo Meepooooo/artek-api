@@ -1,7 +1,6 @@
 package data
 
 import (
-	"github.com/TaeKwonZeus/artek-api/config"
 	"github.com/jmoiron/sqlx"
 )
 
@@ -26,8 +25,8 @@ CREATE TABLE IF NOT EXISTS users(
 );
 `
 
-func Database(config config.DBConfig) (*sqlx.DB, error) {
-	db, err := sqlx.Connect("sqlite3", config.DSN)
+func Database(dsn string) (*sqlx.DB, error) {
+	db, err := sqlx.Connect("sqlite3", dsn)
 	if err != nil {
 		return nil, err
 	}
