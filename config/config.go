@@ -9,24 +9,16 @@ import (
 )
 
 type Config struct {
-	DSN  string
-	Port int
-}
-
-type DBConfig struct {
-	DSN string
-}
-
-type APIConfig struct {
-	Port int
+	DBLocation string
+	Port       int
 }
 
 func Load() (Config, error) {
 	godotenv.Load()
 
-	dsn, exists := os.LookupEnv("DSN")
+	loc, exists := os.LookupEnv("DB_LOCATION")
 	if !exists {
-		return Config{}, errors.New("environment variable DSN does not exist")
+		return Config{}, errors.New("environment variable DB_LOCATION does not exist")
 	}
 
 	portString, exists := os.LookupEnv("PORT")
@@ -39,5 +31,5 @@ func Load() (Config, error) {
 		return Config{}, errors.New("cannot parse environment variable PORT")
 	}
 
-	return Config{DSN: dsn, Port: port}, nil
+	return Config{DBLocation: loc, Port: port}, nil
 }

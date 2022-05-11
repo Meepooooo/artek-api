@@ -1,7 +1,8 @@
-package data
+package db
 
 import (
-	"github.com/jmoiron/sqlx"
+	"database/sql"
+
 	_ "github.com/mattn/go-sqlite3"
 )
 
@@ -26,13 +27,16 @@ CREATE TABLE IF NOT EXISTS users(
 );
 `
 
-func Database(dsn string) (*sqlx.DB, error) {
-	db, err := sqlx.Connect("sqlite3", dsn)
+func Database(location string) (*sql.DB, error) {
+	db, err := sql.Open("sqlite3", location)
 	if err != nil {
 		return nil, err
 	}
 
-	db.MustExec(schema)
+	_, err = db.Exec(schema)
+	if err != nil {
+		return nil, err
+	}
 
 	return db, nil
 }

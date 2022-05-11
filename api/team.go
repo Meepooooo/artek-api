@@ -1,6 +1,7 @@
 package api
 
 import (
+	"database/sql"
 	"encoding/json"
 	"net/http"
 )
@@ -14,6 +15,19 @@ func (c Context) createTeam(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(&body)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	var exists int
+	err = c.DB.QueryRow("SELECT 1 FROM teams WHERE room_id = ?", body.RoomId).Scan(&exists)
+	switch err {
+	case sql.ErrNoRows:
+		http.Error(w, "Room with given ID does not exist", http.StatusUnprocessableEntity)
+		return
+	case nil:
+		break
+	default:
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 

@@ -1,9 +1,7 @@
 package api
 
-import (
-	"github.com/jmoiron/sqlx"
-)
+import "database/sql"
 
 type Context struct {
-	DB *sqlx.DB
+	DB *sql.DB
 }
