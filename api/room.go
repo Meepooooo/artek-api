@@ -8,26 +8,20 @@ import (
 func (c Context) createRoom(w http.ResponseWriter, r *http.Request) {
 	res, err := c.DB.Exec("INSERT INTO ROOMS(date) VALUES(DATETIME('now'));")
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(err.Error()))
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
 	id, err := res.LastInsertId()
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(err.Error()))
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	resp, err := json.Marshal(struct {
+	resp := struct {
 		ID int `json:"id"`
-	}{ID: int(id)})
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(err.Error()))
-		return
-	}
+	}{ID: int(id)}
 
-	w.Write(resp)
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(&resp)
 }
