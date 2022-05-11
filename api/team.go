@@ -19,7 +19,7 @@ func (c Context) createTeam(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var exists int
-	err = c.DB.QueryRow("SELECT 1 FROM teams WHERE room_id = ?", body.RoomId).Scan(&exists)
+	err = c.DB.QueryRow("SELECT 1 FROM rooms WHERE id = ?;", body.RoomId).Scan(&exists)
 	switch err {
 	case sql.ErrNoRows:
 		http.Error(w, "Room with given ID does not exist", http.StatusUnprocessableEntity)
