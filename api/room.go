@@ -23,5 +23,5 @@ func (c Context) createRoom(w http.ResponseWriter, r *http.Request) {
 	}{ID: int(id)}
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(&resp)
+	json.NewEncoder(w).Encode(resp)
 }
