@@ -23,7 +23,7 @@ func (c Context) createUser(w http.ResponseWriter, r *http.Request) {
 	err = c.DB.QueryRow("SELECT 1 FROM teams WHERE id = ?;", body.TeamID).Scan(&exists)
 	switch err {
 	case sql.ErrNoRows:
-		http.Error(w, "Room with given ID does not exist", http.StatusUnprocessableEntity)
+		http.Error(w, "Team with given ID does not exist", http.StatusUnprocessableEntity)
 		return
 	case nil:
 		break
