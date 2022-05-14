@@ -22,8 +22,5 @@ vendor/
 # Go workspace file
 go.work
 
-# Environment variable file
-.env
-
 # Exclude Dockerfile
 !Dockerfile
