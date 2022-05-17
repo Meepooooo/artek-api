@@ -1,6 +1,7 @@
 package api
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
@@ -15,7 +16,7 @@ func Router(context Context) http.Handler {
 	r.Use(middleware.Recoverer)
 	r.Use(middleware.URLFormat)
 
-	r.Get("/", test)
+	r.Get("/", context.test)
 	r.Route("/rooms", func(r chi.Router) {
 		r.Post("/new", context.createRoom)
 	})
@@ -27,4 +28,14 @@ func Router(context Context) http.Handler {
 	})
 
 	return r
+}
+
+func (c Context) test(w http.ResponseWriter, r *http.Request) {
+	err := c.DB.Ping()
+	if err != nil {
+		http.Error(w, "Database failed to respond", http.StatusInternalServerError)
+	}
+
+	fmt.Fprint(w, "This is a test endpoint. ",
+		"Use it to verify that the server and the database are online and working.")
 }
