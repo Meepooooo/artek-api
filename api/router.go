@@ -31,9 +31,15 @@ func Router(context Context) http.Handler {
 }
 
 func (c Context) test(w http.ResponseWriter, r *http.Request) {
+	if c.DB == nil {
+		http.Error(w, "Database connection doesn't exist", http.StatusInternalServerError)
+		return
+	}
+
 	err := c.DB.Ping()
 	if err != nil {
 		http.Error(w, "Database failed to respond", http.StatusInternalServerError)
+		return
 	}
 
 	fmt.Fprint(w, "This is a test endpoint. ",
