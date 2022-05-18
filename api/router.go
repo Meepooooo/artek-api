@@ -21,10 +21,10 @@ func Router(context Context) http.Handler {
 		r.Post("/new", context.createRoom)
 	})
 	r.Route("/teams", func(r chi.Router) {
+		r.Get("/{id}", context.getTeamData)
 		r.Post("/new", context.createTeam)
 	})
 	r.Route("/users", func(r chi.Router) {
-		r.Get("/", context.listUsers)
 		r.Post("/new", context.createUser)
 	})
 
