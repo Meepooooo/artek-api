@@ -4,7 +4,47 @@ import (
 	"database/sql"
 	"encoding/json"
 	"net/http"
+	"strconv"
 )
+
+func (c Context) listUsers(w http.ResponseWriter, r *http.Request) {
+	type user struct {
+		Name string `json:"name"`
+		Role string `json:"role"`
+	}
+
+	teamID, err := strconv.Atoi(r.URL.Query().Get("teamid"))
+	if err != nil {
+		http.Error(w, "Query parameter teamid not specified or is not a number", http.StatusUnprocessableEntity)
+		return
+	}
+
+	rows, err := c.DB.Query("SELECT name, role FROM users WHERE team_id = ?", teamID)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	defer rows.Close()
+
+	var users []user
+
+	for rows.Next() {
+		var user user
+		if err := rows.Scan(&user.Name, &user.Role); err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+		users = append(users, user)
+	}
+
+	resp := struct {
+		TeamID int    `json:"teamId"`
+		Users  []user `json:"users"`
+	}{teamID, users}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(resp)
+}
 
 func (c Context) createUser(w http.ResponseWriter, r *http.Request) {
 	var body struct {
@@ -49,5 +89,7 @@ func (c Context) createUser(w http.ResponseWriter, r *http.Request) {
 		Name string `json:"name"`
 		Role int    `json:"role"`
 	}{ID: id, Name: body.Name, Role: body.Role}
+
+	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(resp)
 }

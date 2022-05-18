@@ -24,6 +24,7 @@ func Router(context Context) http.Handler {
 		r.Post("/new", context.createTeam)
 	})
 	r.Route("/users", func(r chi.Router) {
+		r.Get("/", context.listUsers)
 		r.Post("/new", context.createUser)
 	})
 
