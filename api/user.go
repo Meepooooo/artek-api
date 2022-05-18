@@ -9,6 +9,7 @@ import (
 
 func (c Context) listUsers(w http.ResponseWriter, r *http.Request) {
 	type user struct {
+		ID   int    `json:"id"`
 		Name string `json:"name"`
 		Role string `json:"role"`
 	}
@@ -19,7 +20,7 @@ func (c Context) listUsers(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	rows, err := c.DB.Query("SELECT name, role FROM users WHERE team_id = ?", teamID)
+	rows, err := c.DB.Query("SELECT id, name, role FROM users WHERE team_id = ?", teamID)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -30,7 +31,7 @@ func (c Context) listUsers(w http.ResponseWriter, r *http.Request) {
 
 	for rows.Next() {
 		var user user
-		if err := rows.Scan(&user.Name, &user.Role); err != nil {
+		if err := rows.Scan(&user.ID, &user.Name, &user.Role); err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
