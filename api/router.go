@@ -42,6 +42,5 @@ func (c Context) test(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Fprint(w, "This is a test endpoint. ",
-		"Use it to verify that the server and the database are online and working.")
+	fmt.Fprint(w, "This is a test endpoint. Use it to verify that the server and the database are online and working.")
 }
