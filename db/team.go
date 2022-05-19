@@ -34,14 +34,14 @@ func GetTeam(db *sql.DB, id int) (team Team, err error) {
 	return team, nil
 }
 
-func CreateTeam(db *sql.DB, team Team) (id int, err error) {
+func CreateTeam(db *sql.DB, name string, roomID int) (id int, err error) {
 	var exists int
-	err = db.QueryRow("SELECT 1 FROM rooms WHERE id = ?;", team.RoomID).Scan(&exists)
+	err = db.QueryRow("SELECT 1 FROM rooms WHERE id = ?;", roomID).Scan(&exists)
 	if err != nil {
 		return 0, err
 	}
 
-	res, err := db.Exec("INSERT INTO teams(name, room_id) VALUES(?, ?);", team.Name, team.RoomID)
+	res, err := db.Exec("INSERT INTO teams(name, room_id) VALUES(?, ?);", name, roomID)
 	if err != nil {
 		return 0, err
 	}

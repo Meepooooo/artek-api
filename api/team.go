@@ -45,7 +45,7 @@ func (e Env) createTeam(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	id, err := db.CreateTeam(e.DB, db.Team{Name: body.Name, RoomID: body.RoomID})
+	id, err := db.CreateTeam(e.DB, body.Name, body.RoomID)
 	switch err {
 	case sql.ErrNoRows:
 		http.Error(w, "Room with given ID does not exist", http.StatusUnprocessableEntity)
