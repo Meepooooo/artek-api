@@ -5,8 +5,8 @@ import (
 	"net/http"
 )
 
-func (c Context) createRoom(w http.ResponseWriter, r *http.Request) {
-	res, err := c.DB.Exec("INSERT INTO ROOMS(date) VALUES(DATETIME('now'));")
+func (e Env) createRoom(w http.ResponseWriter, r *http.Request) {
+	res, err := e.DB.Exec("INSERT INTO ROOMS(date) VALUES(DATETIME('now'));")
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
