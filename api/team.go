@@ -9,22 +9,41 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
-func (c Context) getTeamData(w http.ResponseWriter, r *http.Request) {
+func (c Context) getTeam(w http.ResponseWriter, r *http.Request) {
+	type team struct {
+		ID     int    `json:"id"`
+		Name   string `json:"name"`
+		RoomID string `json:"roomId"`
+	}
+
 	type user struct {
 		ID   int    `json:"id"`
 		Name string `json:"name"`
 		Role string `json:"role"`
 	}
 
-	teamID, err := strconv.Atoi(chi.URLParam(r, "id"))
+	id, err := strconv.Atoi(chi.URLParam(r, "id"))
 	if err != nil {
 		http.Error(w, "Team ID not specified or is not a number", http.StatusUnprocessableEntity)
 		return
 	}
 
-	rows, err := c.DB.Query("SELECT id, name, role FROM users WHERE team_id = ?", teamID)
+	var row team
+	err = c.DB.QueryRow("SELECT id, name, room_id FROM teams WHERE id = ?;", id).Scan(&row.ID, &row.Name, &row.RoomID)
+	switch err {
+	case sql.ErrNoRows:
+		http.Error(w, "Team with given ID does not exist", http.StatusUnprocessableEntity)
+		return
+	case nil:
+		break
+	default:
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	rows, err := c.DB.Query("SELECT id, name, role FROM users WHERE team_id = ?", id)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 	defer rows.Close()
@@ -34,16 +53,16 @@ func (c Context) getTeamData(w http.ResponseWriter, r *http.Request) {
 	for rows.Next() {
 		var user user
 		if err := rows.Scan(&user.ID, &user.Name, &user.Role); err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 		users = append(users, user)
 	}
 
 	resp := struct {
-		TeamID int    `json:"teamId"`
-		Users  []user `json:"users"`
-	}{teamID, users}
+		team
+		Users []user `json:"users"`
+	}{row, users}
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(resp)
