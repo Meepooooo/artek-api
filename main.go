@@ -21,8 +21,8 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	context := api.Context{DB: db}
-	r := api.Router(context)
+	env := api.Env{DB: db}
+	r := api.Router(env)
 
 	log.Printf("available at port %d", config.Port)
 	http.ListenAndServe(fmt.Sprintf(":%d", config.Port), r)

@@ -1,6 +1,7 @@
 package api
 
 import (
+	"database/sql"
 	"fmt"
 	"net/http"
 
@@ -8,7 +9,11 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 )
 
-func Router(context Context) http.Handler {
+type Env struct {
+	DB *sql.DB
+}
+
+func Router(e Env) http.Handler {
 	r := chi.NewRouter()
 
 	r.Use(middleware.RequestID)
@@ -16,22 +21,22 @@ func Router(context Context) http.Handler {
 	r.Use(middleware.Recoverer)
 	r.Use(middleware.URLFormat)
 
-	r.Get("/", context.test)
+	r.Get("/", e.test)
 	r.Route("/rooms", func(r chi.Router) {
-		r.Post("/new", context.createRoom)
+		r.Post("/new", e.createRoom)
 	})
 	r.Route("/teams", func(r chi.Router) {
-		r.Get("/{id}", context.getTeam)
-		r.Post("/new", context.createTeam)
+		r.Get("/{id}", e.getTeam)
+		r.Post("/new", e.createTeam)
 	})
 	r.Route("/users", func(r chi.Router) {
-		r.Post("/new", context.createUser)
+		r.Post("/new", e.createUser)
 	})
 
 	return r
 }
 
-func (c Context) test(w http.ResponseWriter, r *http.Request) {
+func (c Env) test(w http.ResponseWriter, r *http.Request) {
 	if c.DB == nil {
 		http.Error(w, "Database connection doesn't exist", http.StatusInternalServerError)
 		return

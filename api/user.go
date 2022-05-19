@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-func (c Context) createUser(w http.ResponseWriter, r *http.Request) {
+func (e Env) createUser(w http.ResponseWriter, r *http.Request) {
 	var body struct {
 		Name   string
 		Role   int
@@ -20,7 +20,7 @@ func (c Context) createUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var exists int
-	err = c.DB.QueryRow("SELECT 1 FROM teams WHERE id = ?;", body.TeamID).Scan(&exists)
+	err = e.DB.QueryRow("SELECT 1 FROM teams WHERE id = ?;", body.TeamID).Scan(&exists)
 	switch err {
 	case sql.ErrNoRows:
 		http.Error(w, "Team with given ID does not exist", http.StatusUnprocessableEntity)
@@ -32,7 +32,7 @@ func (c Context) createUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	res, err := c.DB.Exec("INSERT INTO users(name, role, team_id) VALUES(?, ?, ?)", body.Name, body.Role, body.TeamID)
+	res, err := e.DB.Exec("INSERT INTO users(name, role, team_id) VALUES(?, ?, ?)", body.Name, body.Role, body.TeamID)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -45,10 +45,8 @@ func (c Context) createUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	resp := struct {
-		ID   int64  `json:"id"`
-		Name string `json:"name"`
-		Role int    `json:"role"`
-	}{ID: id, Name: body.Name, Role: body.Role}
+		ID int64 `json:"id"`
+	}{ID: id}
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(resp)
