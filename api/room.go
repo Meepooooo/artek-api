@@ -6,7 +6,7 @@ import (
 )
 
 func (e Env) createRoom(w http.ResponseWriter, r *http.Request) {
-	res, err := e.DB.Exec("INSERT INTO ROOMS(date) VALUES(DATETIME('now'));")
+	res, err := e.DB.Exec("INSERT INTO ROOMS(time) VALUES(DATETIME('now'));")
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

@@ -2,6 +2,7 @@ package db
 
 import (
 	"database/sql"
+	"time"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -13,7 +14,7 @@ type DB struct {
 var schema = `
 CREATE TABLE IF NOT EXISTS rooms(
 	id INTEGER PRIMARY KEY,
-	date DATETIME NOT NULL
+	time DATETIME NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS teams(
@@ -46,11 +47,40 @@ func Database(location string) (*DB, error) {
 	return &DB{db: db}, nil
 }
 
+type Room struct {
+	ID    int       `json:"id"`
+	Time  time.Time `json:"time"`
+	Teams []Team    `json:"teams"`
+}
+
+func (d *DB) GetRoom(id int) (room Room, err error) {
+	err = d.db.QueryRow("SELECT id, time FROM rooms WHERE id = ?", id).Scan(&room.ID, &room.Time)
+	if err != nil {
+		return Room{}, err
+	}
+
+	rows, err := d.db.Query("SELECT id, name FROM teams WHERE room_id = ?", id)
+	if err != nil {
+		return Room{}, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var team Team
+		if err = rows.Scan(&team.ID, &team.Name); err != nil {
+			return Room{}, err
+		}
+		room.Teams = append(room.Teams, team)
+	}
+
+	return room, nil
+}
+
 type Team struct {
 	ID     int    `json:"id"`
 	Name   string `json:"name"`
 	RoomID int    `json:"roomId,omitempty"`
-	Users  []User `json:"users"`
+	Users  []User `json:"users,omitempty"`
 }
 
 func (d *DB) GetTeam(id int) (team Team, err error) {
