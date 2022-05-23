@@ -6,6 +6,10 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
+type DB struct {
+	db *sql.DB
+}
+
 var schema = `
 CREATE TABLE IF NOT EXISTS rooms(
 	id INTEGER PRIMARY KEY,
@@ -28,7 +32,7 @@ CREATE TABLE IF NOT EXISTS users(
 );
 `
 
-func Database(location string) (*sql.DB, error) {
+func Database(location string) (*DB, error) {
 	db, err := sql.Open("sqlite3", location)
 	if err != nil {
 		return nil, err
@@ -39,7 +43,7 @@ func Database(location string) (*sql.DB, error) {
 		return nil, err
 	}
 
-	return db, nil
+	return &DB{db: db}, nil
 }
 
 type Team struct {
@@ -49,13 +53,13 @@ type Team struct {
 	Users  []User `json:"users"`
 }
 
-func GetTeam(db *sql.DB, id int) (team Team, err error) {
-	err = db.QueryRow("SELECT id, name, room_id FROM teams WHERE id = ?;", id).Scan(&team.ID, &team.Name, &team.RoomID)
+func (d *DB) GetTeam(id int) (team Team, err error) {
+	err = d.db.QueryRow("SELECT id, name, room_id FROM teams WHERE id = ?;", id).Scan(&team.ID, &team.Name, &team.RoomID)
 	if err != nil {
 		return Team{}, err
 	}
 
-	rows, err := db.Query("SELECT id, name, role FROM users WHERE team_id = ?", id)
+	rows, err := d.db.Query("SELECT id, name, role FROM users WHERE team_id = ?", id)
 	if err != nil {
 		return Team{}, err
 	}
@@ -72,14 +76,14 @@ func GetTeam(db *sql.DB, id int) (team Team, err error) {
 	return team, nil
 }
 
-func CreateTeam(db *sql.DB, name string, roomID int) (id int, err error) {
+func (d *DB) CreateTeam(name string, roomID int) (id int, err error) {
 	var exists int
-	err = db.QueryRow("SELECT 1 FROM rooms WHERE id = ?;", roomID).Scan(&exists)
+	err = d.db.QueryRow("SELECT 1 FROM rooms WHERE id = ?;", roomID).Scan(&exists)
 	if err != nil {
 		return 0, err
 	}
 
-	res, err := db.Exec("INSERT INTO teams(name, room_id) VALUES(?, ?);", name, roomID)
+	res, err := d.db.Exec("INSERT INTO teams(name, room_id) VALUES(?, ?);", name, roomID)
 	if err != nil {
 		return 0, err
 	}

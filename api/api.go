@@ -1,16 +1,16 @@
 package api
 
 import (
-	"database/sql"
 	"fmt"
 	"net/http"
 
+	"github.com/TaeKwonZeus/artek-api/db"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 )
 
 type Env struct {
-	DB *sql.DB
+	DB *db.DB
 }
 
 func Router(e Env) http.Handler {

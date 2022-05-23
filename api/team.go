@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/TaeKwonZeus/artek-api/db"
 	"github.com/go-chi/chi/v5"
 )
 
@@ -17,7 +16,7 @@ func (e Env) getTeam(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	team, err := db.GetTeam(e.DB, id)
+	team, err := e.DB.GetTeam(id)
 	switch err {
 	case sql.ErrNoRows:
 		http.Error(w, "Team with given ID does not exist", http.StatusUnprocessableEntity)
@@ -45,7 +44,7 @@ func (e Env) createTeam(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	id, err := db.CreateTeam(e.DB, body.Name, body.RoomID)
+	id, err := e.DB.CreateTeam(body.Name, body.RoomID)
 	switch err {
 	case sql.ErrNoRows:
 		http.Error(w, "Room with given ID does not exist", http.StatusUnprocessableEntity)
