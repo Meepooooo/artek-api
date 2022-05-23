@@ -23,6 +23,7 @@ func Router(e Env) http.Handler {
 
 	r.Get("/", e.test)
 	r.Route("/rooms", func(r chi.Router) {
+		r.Get("/{id}", e.getRoom)
 		r.Post("/new", e.createRoom)
 	})
 	r.Route("/teams", func(r chi.Router) {
