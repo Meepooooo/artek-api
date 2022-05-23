@@ -30,9 +30,9 @@ func (d *DB) GetTeam(id int) (team Team, err error) {
 	return team, nil
 }
 
-func (d *DB) CreateTeam(name string, roomID int) (id int, err error) {
+func (d *DB) CreateTeam(name string, roomID int) (int, error) {
 	var exists int
-	err = d.db.QueryRow("SELECT 1 FROM rooms WHERE id = ?;", roomID).Scan(&exists)
+	err := d.db.QueryRow("SELECT 1 FROM rooms WHERE id = ?;", roomID).Scan(&exists)
 	if err != nil {
 		return 0, err
 	}

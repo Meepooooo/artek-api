@@ -7,9 +7,9 @@ type User struct {
 	TeamID int    `json:"teamId,omitempty"`
 }
 
-func (d *DB) CreateUser(name string, role int, teamID int) (id int, err error) {
+func (d *DB) CreateUser(name string, role int, teamID int) (int, error) {
 	var exists int
-	err = d.db.QueryRow("SELECT 1 FROM teams WHERE id = ?;", teamID).Scan(&exists)
+	err := d.db.QueryRow("SELECT 1 FROM teams WHERE id = ?;", teamID).Scan(&exists)
 	if err != nil {
 		return 0, err
 	}
@@ -19,10 +19,10 @@ func (d *DB) CreateUser(name string, role int, teamID int) (id int, err error) {
 		return 0, err
 	}
 
-	rowID, err := res.LastInsertId()
+	id, err := res.LastInsertId()
 	if err != nil {
 		return 0, err
 	}
 
-	return int(rowID), nil
+	return int(id), nil
 }

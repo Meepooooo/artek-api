@@ -31,7 +31,7 @@ func (d *DB) GetRoom(id int) (room Room, err error) {
 	return room, nil
 }
 
-func (d *DB) CreateRoom() (id int, err error) {
+func (d *DB) CreateRoom() (int, error) {
 	res, err := d.db.Exec("INSERT INTO ROOMS(time) VALUES(DATETIME('now'));")
 	if err != nil {
 		return 0, err
