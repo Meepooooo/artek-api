@@ -11,7 +11,7 @@ RUN go mod download
 COPY main.go ./
 COPY api/*.go ./api/
 COPY config/config.go ./config/
-COPY db/db.go ./db/
+COPY db/*.go ./db/
 
 RUN go build -o /artek-api
 
