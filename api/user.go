@@ -19,8 +19,7 @@ func (e Env) createUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var exists int
-	err = e.DB.QueryRow("SELECT 1 FROM teams WHERE id = ?;", body.TeamID).Scan(&exists)
+	id, err := e.DB.CreateUser(body.Name, body.Role, body.TeamID)
 	switch err {
 	case sql.ErrNoRows:
 		http.Error(w, "Team with given ID does not exist", http.StatusUnprocessableEntity)
@@ -32,20 +31,8 @@ func (e Env) createUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	res, err := e.DB.Exec("INSERT INTO users(name, role, team_id) VALUES(?, ?, ?)", body.Name, body.Role, body.TeamID)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	id, err := res.LastInsertId()
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
 	resp := struct {
-		ID int64 `json:"id"`
+		ID int `json:"id"`
 	}{ID: id}
 
 	w.Header().Set("Content-Type", "application/json")

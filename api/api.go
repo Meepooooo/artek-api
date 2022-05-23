@@ -36,13 +36,13 @@ func Router(e Env) http.Handler {
 	return r
 }
 
-func (c Env) test(w http.ResponseWriter, r *http.Request) {
-	if c.DB == nil {
+func (e Env) test(w http.ResponseWriter, r *http.Request) {
+	if e.DB == nil {
 		http.Error(w, "Database connection doesn't exist", http.StatusInternalServerError)
 		return
 	}
 
-	err := c.DB.Ping()
+	err := e.DB.Ping()
 	if err != nil {
 		http.Error(w, "Database failed to respond", http.StatusInternalServerError)
 		return
