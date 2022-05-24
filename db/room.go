@@ -31,16 +31,16 @@ func (d *DB) GetRoom(id int) (room Room, err error) {
 	return room, nil
 }
 
-func (d *DB) CreateRoom() (int, error) {
+func (d *DB) CreateRoom() (id int64, err error) {
 	res, err := d.db.Exec("INSERT INTO ROOMS(time) VALUES(DATETIME('now'));")
 	if err != nil {
 		return 0, err
 	}
 
-	rowID, err := res.LastInsertId()
+	id, err = res.LastInsertId()
 	if err != nil {
 		return 0, err
 	}
 
-	return int(rowID), nil
+	return id, nil
 }

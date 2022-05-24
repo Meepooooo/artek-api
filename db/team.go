@@ -30,9 +30,9 @@ func (d *DB) GetTeam(id int) (team Team, err error) {
 	return team, nil
 }
 
-func (d *DB) CreateTeam(name string, roomID int) (int, error) {
+func (d *DB) CreateTeam(name string, roomID int) (id int64, err error) {
 	var exists int
-	err := d.db.QueryRow("SELECT 1 FROM rooms WHERE id = ?;", roomID).Scan(&exists)
+	err = d.db.QueryRow("SELECT 1 FROM rooms WHERE id = ?;", roomID).Scan(&exists)
 	if err != nil {
 		return 0, err
 	}
@@ -42,10 +42,10 @@ func (d *DB) CreateTeam(name string, roomID int) (int, error) {
 		return 0, err
 	}
 
-	rowID, err := res.LastInsertId()
+	id, err = res.LastInsertId()
 	if err != nil {
 		return 0, err
 	}
 
-	return int(rowID), nil
+	return id, nil
 }

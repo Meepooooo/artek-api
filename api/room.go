@@ -40,8 +40,8 @@ func (e Env) createRoom(w http.ResponseWriter, r *http.Request) {
 	}
 
 	resp := struct {
-		ID int `json:"id"`
-	}{ID: int(id)}
+		ID int64 `json:"id"`
+	}{ID: id}
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(resp)
