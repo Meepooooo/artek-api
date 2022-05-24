@@ -16,9 +16,9 @@ type Config struct {
 func Load() (Config, error) {
 	godotenv.Load()
 
-	loc, exists := os.LookupEnv("DB_LOCATION")
+	loc, exists := os.LookupEnv("DB")
 	if !exists {
-		return Config{}, errors.New("environment variable DB_LOCATION does not exist")
+		return Config{}, errors.New("environment variable DB does not exist")
 	}
 
 	portString, exists := os.LookupEnv("PORT")

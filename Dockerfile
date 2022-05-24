@@ -15,7 +15,7 @@ COPY db/*.go ./db/
 
 RUN go build -o /artek-api
 
-ENV DB_LOCATION /tmp/app.db
+ENV DB /tmp/app.db
 ENV PORT 8080
 
 EXPOSE 8080
