@@ -1,5 +1,7 @@
 package db
 
+// Team represents a quest team.
+// A team belongs to a room and has multiple users.
 type Team struct {
 	ID     int    `json:"id"`
 	Name   string `json:"name"`
@@ -7,6 +9,8 @@ type Team struct {
 	Users  []User `json:"users,omitempty"`
 }
 
+// GetTeam gets a team specified by its ID.
+// If no team is found, GetTeam will return an empty Team and sql.ErrNoRows.
 func (d *DB) GetTeam(id int) (team Team, err error) {
 	err = d.db.QueryRow("SELECT id, name, room_id FROM teams WHERE id = ?;", id).Scan(&team.ID, &team.Name, &team.RoomID)
 	if err != nil {
@@ -30,6 +34,8 @@ func (d *DB) GetTeam(id int) (team Team, err error) {
 	return team, nil
 }
 
+// CreateTeam creates a new team with the specified name and room ID.
+// If no room with the specified ID is found, CreateTeam will return 0 and sql.ErrNoRows.
 func (d *DB) CreateTeam(name string, roomID int) (id int64, err error) {
 	var exists int
 	err = d.db.QueryRow("SELECT 1 FROM rooms WHERE id = ?;", roomID).Scan(&exists)

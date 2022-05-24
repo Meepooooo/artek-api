@@ -8,15 +8,19 @@ import (
 	"github.com/joho/godotenv"
 )
 
+// Config represents an application configuration.
 type Config struct {
-	DBLocation string
-	Port       int
+	DB   string
+	Port int
 }
 
+// Load loads a config from environment variables.
+// Returns an empty config and an error if any of the required
+// environment variables does not exist.
 func Load() (Config, error) {
 	godotenv.Load()
 
-	loc, exists := os.LookupEnv("DB")
+	db, exists := os.LookupEnv("DB")
 	if !exists {
 		return Config{}, errors.New("environment variable DB does not exist")
 	}
@@ -31,5 +35,5 @@ func Load() (Config, error) {
 		return Config{}, errors.New("cannot parse environment variable PORT")
 	}
 
-	return Config{DBLocation: loc, Port: port}, nil
+	return Config{DB: db, Port: port}, nil
 }

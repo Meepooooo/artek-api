@@ -9,10 +9,15 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 )
 
+// Env represents a handler environment.
+// Handlers can be defined as methods on Env to get access to its contents,
+// in particular the database connection.
 type Env struct {
 	DB *db.DB
 }
 
+// Router returns an application router with
+// all the middlewares and routes specified.
 func Router(e Env) http.Handler {
 	r := chi.NewRouter()
 

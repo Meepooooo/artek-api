@@ -32,7 +32,8 @@ CREATE TABLE IF NOT EXISTS users(
 );
 `
 
-func Database(location string) (*DB, error) {
+// Open opens a database specified by its location.
+func Open(location string) (*DB, error) {
 	db, err := sql.Open("sqlite3", location)
 	if err != nil {
 		return nil, err
@@ -46,6 +47,8 @@ func Database(location string) (*DB, error) {
 	return &DB{db: db}, nil
 }
 
+// Ping verifies a connection to the database is still alive,
+// establishing a connection if necessary.
 func (d *DB) Ping() error {
 	return d.db.Ping()
 }

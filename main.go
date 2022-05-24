@@ -16,7 +16,7 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	db, err := db.Database(config.DBLocation)
+	db, err := db.Open(config.DB)
 	if err != nil {
 		log.Fatalln(err)
 	}
