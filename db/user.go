@@ -9,11 +9,10 @@ type User struct {
 	TeamID int    `json:"teamId,omitempty"`
 }
 
-// CreateRoom creates a new room with the specified name, role and team ID.
-// If no team with the specified ID is found, CreateTeam will return 0 and sql.ErrNoRows.
+// CreateUser creates a new user with the specified name, role and team ID.
+// If no team with the specified ID is found, CreateUser will return 0 and sql.ErrNoRows.
 func (d *DB) CreateUser(name string, role int, teamID int) (id int64, err error) {
-	var exists int
-	err = d.db.QueryRow("SELECT 1 FROM teams WHERE id = ?;", teamID).Scan(&exists)
+	err = d.db.QueryRow("SELECT 1 FROM teams WHERE id = ?;", teamID).Scan(new(byte))
 	if err != nil {
 		return 0, err
 	}

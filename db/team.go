@@ -37,8 +37,7 @@ func (d *DB) GetTeam(id int) (team Team, err error) {
 // CreateTeam creates a new team with the specified name and room ID.
 // If no room with the specified ID is found, CreateTeam will return 0 and sql.ErrNoRows.
 func (d *DB) CreateTeam(name string, roomID int) (id int64, err error) {
-	var exists int
-	err = d.db.QueryRow("SELECT 1 FROM rooms WHERE id = ?;", roomID).Scan(&exists)
+	err = d.db.QueryRow("SELECT 1 FROM rooms WHERE id = ?;", roomID).Scan(new(byte))
 	if err != nil {
 		return 0, err
 	}
