@@ -6,7 +6,7 @@ type Team struct {
 	ID     int    `json:"id"`
 	Name   string `json:"name"`
 	RoomID int    `json:"roomId,omitempty"`
-	Users  []User `json:"users,omitempty"`
+	Users  []User `json:"users"`
 }
 
 // GetTeam gets a team specified by its ID.

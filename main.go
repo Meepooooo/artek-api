@@ -21,6 +21,10 @@ func main() {
 		log.Fatalln(err)
 	}
 
+	if err = db.Ping(); err != nil {
+		log.Fatalln(err)
+	}
+
 	env := api.Env{DB: db}
 	r := api.Router(env)
 
