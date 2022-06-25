@@ -1,5 +1,10 @@
 package db
 
+const (
+	rolePlayer = iota + 1
+	roleCaptain
+)
+
 // User represents a quest user.
 // A user belongs to a team.
 type User struct {

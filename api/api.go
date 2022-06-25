@@ -33,6 +33,7 @@ func Router(e Env) http.Handler {
 	})
 	r.Route("/teams", func(r chi.Router) {
 		r.Get("/{id}", e.getTeam)
+		r.Patch("/{id}/balance", e.setTeamBalance)
 		r.Post("/new", e.createTeam)
 	})
 	r.Route("/users", func(r chi.Router) {

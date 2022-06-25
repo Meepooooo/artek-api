@@ -25,6 +25,8 @@ func (d *DB) GetRoom(id int) (room Room, err error) {
 	}
 	defer rows.Close()
 
+	room.Teams = make([]Team, 0)
+
 	for rows.Next() {
 		var team Team
 		if err = rows.Scan(&team.ID, &team.Name); err != nil {
