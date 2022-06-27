@@ -1,10 +1,5 @@
 package db
 
-var defaultResources = map[int]Resources{
-	rolePlayer:  {2, 2, 2, 2},
-	roleCaptain: {3, 3, 3, 3},
-}
-
 type Resources struct {
 	Water  int `json:"Water"`
 	Food   int `json:"Food"`
@@ -80,7 +75,7 @@ func (d *DB) SetTeamBalance(id int) (balance Resources, err error) {
 	}
 
 	for _, user := range team.Users {
-		userResources := defaultResources[user.Role]
+		userResources := roles[user.Role].defaults
 
 		balance.Water += userResources.Water
 		balance.Food += userResources.Food

@@ -1,9 +1,30 @@
 package db
 
 const (
-	rolePlayer = iota + 1
-	roleCaptain
+	roleMechanic = iota + 1
+	roleDrunkard
+	roleMage
 )
+
+var roles = map[int]role{
+	roleMechanic: {
+		defaults: Resources{2, 2, 2, 2},
+		spending: Resources{},
+		earning:  Resources{},
+	},
+	roleDrunkard: {
+		defaults: Resources{3, 3, 3, 3},
+	},
+	roleMage: {
+		defaults: Resources{1, 1, 1, 1},
+	},
+}
+
+type role struct {
+	defaults Resources
+	spending Resources
+	earning  Resources
+}
 
 // User represents a quest user.
 // A user belongs to a team.

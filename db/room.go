@@ -19,7 +19,8 @@ func (d *DB) GetRoom(id int) (room Room, err error) {
 		return Room{}, err
 	}
 
-	rows, err := d.db.Query("SELECT id, name FROM teams WHERE room_id = ?;", id)
+	rows, err := d.db.Query(`SELECT id, name, water, food, oxygen, spirit
+		FROM teams WHERE room_id = ?;`, id)
 	if err != nil {
 		return Room{}, err
 	}
@@ -29,9 +30,26 @@ func (d *DB) GetRoom(id int) (room Room, err error) {
 
 	for rows.Next() {
 		var team Team
-		if err = rows.Scan(&team.ID, &team.Name); err != nil {
+		if err = rows.Scan(&team.ID, &team.Name, &team.Water, &team.Food, &team.Oxygen, &team.Spirit); err != nil {
 			return Room{}, err
 		}
+
+		rows, err := d.db.Query("SELECT id, name, role FROM users WHERE team_id = ?;", id)
+		if err != nil {
+			return Room{}, err
+		}
+		defer rows.Close()
+
+		team.Users = make([]User, 0)
+
+		for rows.Next() {
+			var user User
+			if err = rows.Scan(&user.ID, &user.Name, &user.Role); err != nil {
+				return Room{}, err
+			}
+			team.Users = append(team.Users, user)
+		}
+
 		room.Teams = append(room.Teams, team)
 	}
 
