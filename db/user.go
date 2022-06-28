@@ -9,14 +9,18 @@ const (
 var roles = map[int]role{
 	roleMechanic: {
 		defaults: Resources{5, 5, 5, 5},
-		spending: Resources{},
-		earning:  Resources{},
+		spending: Resources{1, 1, 1, 1},
+		earning:  Resources{2, 2, 2, 2},
 	},
 	roleDrunkard: {
 		defaults: Resources{5, 5, 5, 5},
+		spending: Resources{1, 1, 1, 1},
+		earning:  Resources{2, 2, 2, 2},
 	},
 	roleMage: {
 		defaults: Resources{5, 5, 5, 5},
+		spending: Resources{1, 1, 1, 1},
+		earning:  Resources{2, 2, 2, 2},
 	},
 }
 
