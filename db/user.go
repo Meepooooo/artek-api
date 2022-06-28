@@ -2,7 +2,7 @@ package db
 
 const (
 	roleMechanic = iota + 1
-	roleDrunkard
+	roleCaptain
 	roleMage
 )
 
@@ -12,7 +12,7 @@ var roles = map[int]role{
 		spending: Resources{1, 1, 1, 1},
 		earning:  Resources{2, 2, 2, 2},
 	},
-	roleDrunkard: {
+	roleCaptain: {
 		defaults: Resources{5, 5, 5, 5},
 		spending: Resources{1, 1, 1, 1},
 		earning:  Resources{2, 2, 2, 2},
