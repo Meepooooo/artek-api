@@ -1,10 +1,11 @@
 package db
 
 type Resources struct {
-	Water  int `json:"Water"`
-	Food   int `json:"Food"`
-	Oxygen int `json:"Oxygen"`
-	Spirit int `json:"Spirit"`
+	Water  int `json:"water"`
+	Food   int `json:"food"`
+	Oxygen int `json:"oxygen"`
+	Spirit int `json:"spirit"`
+	Fuel   int `json:"fuel"`
 }
 
 // Team represents a quest team.
@@ -20,9 +21,9 @@ type Team struct {
 // GetTeam gets a team specified by its ID.
 // If no team is found, GetTeam will return an empty Team and sql.ErrNoRows.
 func (d *DB) GetTeam(id int) (team Team, err error) {
-	err = d.db.QueryRow(`SELECT id, name, room_id, water, food, oxygen, spirit
+	err = d.db.QueryRow(`SELECT id, name, room_id, water, food, oxygen, spirit, fuel
 		FROM teams WHERE id = ?;`, id).Scan(&team.ID, &team.Name, &team.RoomID,
-		&team.Water, &team.Food, &team.Oxygen, &team.Spirit)
+		&team.Water, &team.Food, &team.Oxygen, &team.Spirit, &team.Fuel)
 	if err != nil {
 		return Team{}, err
 	}
@@ -54,8 +55,8 @@ func (d *DB) CreateTeam(name string, roomID int) (id int64, err error) {
 		return 0, err
 	}
 
-	res, err := d.db.Exec(`INSERT INTO teams(name, room_id, water, food, oxygen, spirit)
-		VALUES(?, ?, 0, 0, 0, 0);`, name, roomID)
+	res, err := d.db.Exec(`INSERT INTO teams(name, room_id, water, food, oxygen, spirit, fuel)
+		VALUES(?, ?, 0, 0, 0, 0, 0);`, name, roomID)
 	if err != nil {
 		return 0, err
 	}
@@ -81,12 +82,13 @@ func (d *DB) SetTeamBalance(id int) (balance Resources, err error) {
 		balance.Food += userResources.Food
 		balance.Oxygen += userResources.Oxygen
 		balance.Spirit += userResources.Spirit
+		balance.Fuel += userResources.Fuel
 	}
 
 	_, err = d.db.Exec(`UPDATE teams
-		SET water = ?, food = ?, oxygen = ?, spirit = ?
+		SET water = ?, food = ?, oxygen = ?, spirit = ?, fuel = ?
 		WHERE id = ?`,
-		balance.Water, balance.Food, balance.Oxygen, balance.Spirit, id)
+		balance.Water, balance.Food, balance.Oxygen, balance.Spirit, balance.Fuel, id)
 	if err != nil {
 		return Resources{}, err
 	}
