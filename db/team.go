@@ -69,6 +69,8 @@ func (d *DB) CreateTeam(name string, roomID int) (id int64, err error) {
 	return id, nil
 }
 
+// SetTeamBalance calculates a sum of all users' resources
+// and updates the team's resources.
 func (d *DB) SetTeamBalance(id int) (balance Resources, err error) {
 	team, err := d.GetTeam(id)
 	if err != nil {
